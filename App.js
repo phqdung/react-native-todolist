@@ -17,13 +17,14 @@ const FORM_STATE = {
 }
 
 const TodoItem = (props) => {
-  const { todo, onEdit, onTodoDone } = props;
+  const { todo, onEdit, onTodoDone, onDelete } = props;
   return (
     <View>
       <Text>{todo.task}</Text>
       {todo.isDone && <Text>(Done)</Text>}
       {!todo.isDone && <Button title="Check Done" onPress={onTodoDone}></Button>}
       <Button title="Edit" onPress={onEdit}></Button>
+      <Button title="Delete" onPress={onDelete}></Button>
     </View>
   );
 }
@@ -67,7 +68,17 @@ const App = () => {
     setTodoList(newTodoList);
   }
 
-  const renderItem = ({ item }) => <TodoItem todo={item} onEdit={handleEditTodo(item)} onTodoDone={handleDoneTodo(item)} />
+  const handleDeleteTodo = (todoId) => () => {
+    const newTodoList = todoList.filter((todo) => todo.id !== todoId);
+    setTodoList(newTodoList);
+  }
+
+  const renderItem = ({ item }) => {
+    return <TodoItem todo={item}
+      onEdit={handleEditTodo(item)}
+      onTodoDone={handleDoneTodo(item)}
+      onDelete={handleDeleteTodo(item.id)} />
+  }
 
   return (
     <View>
