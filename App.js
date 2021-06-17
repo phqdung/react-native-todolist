@@ -31,6 +31,8 @@ const TodoItem = (props) => {
 
 const App = () => {
   const [todoList, setTodoList] = useState([]);
+  const [isFilter, setIsFilter] = useState(false);
+  const [filterTodoList, setFilterTodoList] = useState(null);
 
   //form
   const [formState, setFormState] = useState(FORM_STATE.ADD);
@@ -80,12 +82,21 @@ const App = () => {
       onDelete={handleDeleteTodo(item.id)} />
   }
 
+  const handleFilter = () => {
+    if (!isFilter) {
+      setFilterTodoList(todoList.filter((todo) => todo.isDone));
+    }
+    setIsFilter(!isFilter);
+  }
+
   return (
     <View>
       <TextInput placeholder="Input your todo..." value={value} onChangeText={(newValue) => setValue(newValue)} ></TextInput>
       <Button title={formState == FORM_STATE.EDIT ? "Save" : "Add"} onPress={formState == FORM_STATE.EDIT ? handleEditSubmit : handleAddSubmit} />
       <Text>Todo List</Text>
-      <FlatList data={todoList} keyExtractor={item => item.id} renderItem={renderItem}></FlatList>
+      <Button title={isFilter ? "View All" : "Filter Todo Done"} onPress={handleFilter}></Button>
+      <Text>-------------------</Text>
+      <FlatList data={isFilter ? filterTodoList : todoList} keyExtractor={item => item.id} renderItem={renderItem}></FlatList>
     </View>
   );
 }
